@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:css": "tailwind build styles/tailwindcss.css -o styles/globals.css",
+    "build:css": "tailwind build -i styles/tailwind.css -o styles/globals.css",
     "start": "next start",
     "lint": "next lint"
   },
@@ -17,6 +17,7 @@
     "next": "12.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-router-dom": "^6.0.2",
     "redux": "^4.1.2",
     "sqli": "^0.0.4"
   },
