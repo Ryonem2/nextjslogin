@@ -1,0 +1,18 @@
+.forminputlogin {
+  padding-left: 10px;
+}
+.btnSubmit {
+  width: 75px;
+  height: 32px;
+  padding: 3px 5px 5px 3px;
+  border-radius: 15px;
+  background-color: white;
+  transition: 0.2s all ease-in-out;
+  cursor: pointer;
+
+  border: solid 1px gray;
+}
+.btnSubmit:hover {
+  background-color: gray;
+  color: white;
+}
