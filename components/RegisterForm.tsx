@@ -13,6 +13,14 @@ function RegisterForm() {
         </h1>
         <div className="flex justify-center items-center">
           <form className="w-full px-12">
+            <label className="block" htmlFor="name">
+              Name
+            </label>
+            <input className={inputStyle} type="text" placeholder="Name" />
+            <label className="block" htmlFor="sername">
+              Sername
+            </label>
+            <input className={inputStyle} type="text" placeholder="Sername" />
             <label className="block" htmlFor="username">
               Username
             </label>
@@ -25,16 +33,19 @@ function RegisterForm() {
               type="password"
               placeholder="Password"
             />
-            <label className="block" htmlFor="password">
+            <label className="block" htmlFor="Cpassword">
               Confirm Password
             </label>
             <input
               className={inputStyle}
               type="password"
-              placeholder="Password"
+              placeholder="Confirm Password"
             />
             {/* <small className="py-1 text-red-500 text-sm">{check}</small> */}
-            <input className={s.btnSubmit} type="submit" />
+            <input
+              className="mx-auto h-9 w-20 transition-all text-blue-400 border-2 border-blue-400 hover:text-white hover:bg-blue-500 rounded-xl"
+              type="submit"
+            />
           </form>
         </div>
       </div>
