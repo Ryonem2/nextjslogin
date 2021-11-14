@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import Container from "../Layouts/components/Container";
-import s from "../styles/login.module.css";
+import Container from "../../../Layouts/components/Container";
+import s from "../../../styles/login.module.css";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import * as actions from "../../Navbar/action";
 
 function LoginForm() {
   type loginReturnType = {
@@ -14,6 +16,11 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState(false);
   const inputStyle = `block w-full mb-4 border-2 border-gray-300 focus:border-gray-400 rounded-2xl ${s.forminputlogin}`;
+  const dispatch = useDispatch();
+
+  const loggedIn = (id: number, name: string, sername: string) => {
+    dispatch(actions.login(id, name, sername));
+  };
 
   const checkAuth = async (e: any) => {
     e.preventDefault();
@@ -22,12 +29,17 @@ function LoginForm() {
         username,
         password,
       });
-      if (data) {
+      // console.log(data);
+
+      if (data.statusLogin) {
+        loggedIn(data.id, data.name, data.sername);
         setCheckDone("You are logged in");
+        setCheck("");
         setUsername("");
         setPassword("");
       } else {
         setCheck("Your username or password is incorrect");
+        setCheckDone("");
         setPassword("");
       }
     } catch (e) {

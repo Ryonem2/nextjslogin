@@ -1,6 +1,6 @@
 import React from "react";
-import Navbar from "../components/Navbar";
-import LoginForm from "../components/LoginForm";
+import Navbar from "../models/Navbar/components/Navbar";
+import LoginForm from "../models/Login/components/LoginForm";
 
 export default function login() {
   return (

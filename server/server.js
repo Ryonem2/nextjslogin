@@ -3,7 +3,6 @@ const express = require("express");
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
 const sessions = require("express-session");
 const PORT = 8080;
 const aDay = 3600;
@@ -51,26 +50,36 @@ app.post("/loginUser", (req, response) => {
     `SELECT * FROM datauser WHERE USERNAME='${username}'`,
     (err, res) => {
       const data = res[0];
-      // console.log(res[0]);
-      const hash = data.password;
-      const username2 = data.username;
+      console.log(`res = ${res[0]}`);
+
       if (!!err) {
-        console.error(err);
+        console.log(`Error`);
       } else {
-        let isUsernameTrue;
-        if (username === username2) {
-          isUsernameTrue = true;
+        if (data == undefined) {
+          response.send({ statusLogin: false });
         } else {
-          isUsernameTrue = false;
-        }
-        bcrypt.compare(plainPassword, hash, (err, isPasswordTrue) => {
-          console.log(isPasswordTrue);
-          if (isPasswordTrue && isUsernameTrue) {
-            response.send(true);
+          const hash = data.password;
+          const username2 = data.username;
+          let isUsernameTrue;
+          if (username === username2) {
+            isUsernameTrue = true;
           } else {
-            response.send(false);
+            isUsernameTrue = false;
           }
-        });
+          bcrypt.compare(plainPassword, hash, (err, isPasswordTrue) => {
+            console.log(isPasswordTrue);
+            if (isPasswordTrue && isUsernameTrue) {
+              response.send({
+                statusLogin: true,
+                id: data.id,
+                name: data.name,
+                sername: data.sername,
+              });
+            } else {
+              response.send(false);
+            }
+          });
+        }
       }
     }
   );
