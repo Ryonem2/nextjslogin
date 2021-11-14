@@ -1,8 +1,9 @@
 const cors = require("cors");
 const express = require("express");
 const mysql = require("mysql");
-const bcrypt = require("bcrypy");
+const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const sessions = require("express-session");
 const PORT = 8080;
 const aDay = 3600;
@@ -30,45 +31,92 @@ app.use(
     resave: false,
   })
 );
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/view"));
+
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
 app.post("/loginUser", (req, response) => {
-  const session = req.session;
+  // const session = req.session;
   const username = req.body.username;
   const plainPassword = req.body.password;
 
-  con.query(`SELETE * FROM datauser WHERE username=${username}`, (err, res) => {
-    const data = res.json();
-    const hash = data.password;
+  // console.log(username + "aa");
+  // console.log(req.body);
+
+  con.query(
+    `SELECT * FROM datauser WHERE USERNAME='${username}'`,
+    (err, res) => {
+      const data = res[0];
+      // console.log(res[0]);
+      const hash = data.password;
+      const username2 = data.username;
+      if (!!err) {
+        console.error(err);
+      } else {
+        let isUsernameTrue;
+        if (username === username2) {
+          isUsernameTrue = true;
+        } else {
+          isUsernameTrue = false;
+        }
+        bcrypt.compare(plainPassword, hash, (err, isPasswordTrue) => {
+          console.log(isPasswordTrue);
+          if (isPasswordTrue && isUsernameTrue) {
+            response.send(true);
+          } else {
+            response.send(false);
+          }
+        });
+      }
+    }
+  );
+});
+
+app.get("/testapi/", (req, response) => {
+  const param = req.params.param;
+
+  con.query(`SELECT * FROM datauser`, (err, res) => {
+    // const data = res.json();
+    // const hash = data.password;
     if (!!err) {
       console.error(err);
     } else {
-      bcrypt.compare(plainPassword, hash, (err, isTrue) => {
-        response.send(isTrue);
-      });
+      console.log(res);
+      response.send(res[0].name);
     }
   });
 });
 
-app.post("/registerUser", (req, res) => {
+app.post("/registerUser", (req, ress) => {
   const name = req.body.name;
   const sername = req.body.sername;
   const username = req.body.username;
   const password = req.body.password;
-  const salt = Math.random();
+  const salt = 10;
 
   bcrypt.hash(password, salt, (err, hash) => {
     if (!!err) {
       console.error(err);
     } else {
       con.query(
-        `INSERT INTO datauser (name,sername,username,password,) values ('${name}','${sername}','${username}','${hash}')`,
+        `INSERT INTO datauser (name,sername,username,password) VALUES ('${name}','${sername}','${username}','${hash}')`,
         (err, res) => {
-          !!err ? console.error(err) : console.log("inserted");
+          if (!!err) {
+            console.log(err);
+          } else {
+            ress.send({ data: true });
+            console.log("Inserted datauser");
+          }
         }
       );
     }
   });
+});
+
+app.listen(PORT, (err, ress) => {
+  !!err ? console.error(err) : console.log("Connected");
 });
